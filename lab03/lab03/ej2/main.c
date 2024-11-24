@@ -88,30 +88,39 @@ int main(int argc, char *argv[]) {
     /* show the ordered array in the screen */
     array_dump(array);
 
-    int mmtemp = 0;
-    mmtemp = minmintemp(array);
-    printf("la menor temperatura minima fue:%d\n",mmtemp);
+    int mmtemp = minmintemp(array);
+    printf("\nla menor temperatura minima fue:%d\n",mmtemp);
     
-    int i=0, anno=FST_YEAR , out[YEARS];
-    //  procedimiento(array, out);
-    printf("la temperatura minima en cada año fue:\n[");
-    while (i<YEARS-1) {
-        printf("%d: %d, ", anno, out[i]);
-        i=i+1; anno=anno+1;
-    }
-    printf("%d: %d]\n", anno, out[i]);
 
-    anno=FST_YEAR, i=0;
+    array_from_file(array, filepath);
+    int out[YEARS];
+    procedimiento(array, out);
+
+    int anno = FST_YEAR, i = 0;
+    printf("\nla temperatura minima en cada año fue:\n");
+    while (i < YEARS) {
+        printf("año: %d temperatura maxima: %d \n", anno, out[i]);
+        i++; 
+        anno++;
+    }
+
+    array_from_file(array, filepath);
     month_t output[YEARS];
-    //  mes_max_prec(array, output);
-    printf("el mes con mas precipitaciones en cada año fue:\n[");
-    while (i<YEARS-1)
-    {
-        printf("%d: %d, ", anno, output[i]);
-        i=i+1; anno=anno+1;
-    }
-    printf("%d: %d]\n", anno, output[i]);
+    mes_max_prec(array, output);
+    
+    anno = FST_YEAR, i = 0;
+    printf("\nel mes con mas precipitaciones en cada año fue:\n");
+    
+    const char *month_names[] = {
+    "Enero", "Febrero", "Marx", "Abril", "Mayo", "Juño",
+    "Julio", "august (el tema de Taylor)", "en septiembre tu fuiste mía", "Oktubre", "November Rain", "Dezembro"
+    };
 
+    while (i < YEARS) {
+        printf("año %d, mes de mayores precipitaciones: %s \n", anno, month_names[output[i]]);
+        i++; 
+        anno++;
+    }
 
     return (EXIT_SUCCESS);
 }

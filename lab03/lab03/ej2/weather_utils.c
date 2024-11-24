@@ -33,16 +33,18 @@ int minmintemp(WeatherTable date) {
 }
 
 void procedimiento(WeatherTable date, int output[YEARS]) {
-    unsigned int year = 0u;
+    int res = -2147483648;
+    int year = 0;
     while (year < YEARS) {
-        int res = -2147483648;
-        unsigned int month = 0u;
-        while (month < MONTHS)
-        {
-            unsigned int day = 0u;
+        int month = 0;
+        while (month < MONTHS) {
+    
+            int day = 0;
             while (day < DAYS) {
+    
                 Weather fecha = date[year][month][day];
-                if (fecha._max_temp < res) {
+                if (fecha._max_temp > res) {
+                    
                     res = fecha._max_temp;
                 }
                 day = day + 1;
@@ -64,7 +66,7 @@ void mes_max_prec(WeatherTable date, month_t output[YEARS]) {
             unsigned int day = 0u;
             while (day < DAYS) {
                 Weather fecha = date[year][month][day];
-                if (fecha._rainfall < res) {
+                if (fecha._rainfall > res) {
                     res = fecha._rainfall;
                     mes = month;
                 }
