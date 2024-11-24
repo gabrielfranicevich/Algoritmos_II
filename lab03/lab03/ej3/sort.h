@@ -1,7 +1,7 @@
-/*
-  @file sort.h
-  @brief Sort functions declarations
-*/
+/**
+ * @file sort.h
+ * @brief Sort functions declarations
+ */
 #ifndef _SORT_H
 #define _SORT_H
 #include <stdbool.h>

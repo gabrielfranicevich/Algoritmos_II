@@ -1,7 +1,7 @@
-/*
-  @file player.h
-  @brief Player structure definition
-*/
+/**
+ * @file player.h
+ * @brief Player structure definition
+ */
 #ifndef _PLAYER_H
 #define _PLAYER_H
 #define MAX_NAME_LENGTH 100u

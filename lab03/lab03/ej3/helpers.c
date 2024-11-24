@@ -1,7 +1,7 @@
-/*
-  @file helpers.c
-  @brief player helpers methods implementation
-*/
+/**
+ * @file helpers.c
+ * @brief player helpers methods implementation
+ */
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -56,19 +56,16 @@ bool array_is_permutation_of(player_t a[], player_t b[], unsigned int length) {
  *
  * @return Amount of read characters
  */
-static unsigned int process_string(FILE *file, char separator, char result[], unsigned int result_max_size)
-{
+static unsigned int process_string(FILE *file, char separator, char result[], unsigned int result_max_size) {
     unsigned int str_size = 0u;
     char c = (char)((int)separator + 1);
     while (!feof(file) && c != separator) {
         c = fgetc(file);
-        if (c != separator && str_size < result_max_size - 1u)
-        {
+        if (c != separator && str_size < result_max_size - 1u) {
             result[str_size] = c;
             ++str_size;
         }
-        else if (c != separator && str_size >= result_max_size - 1u)
-        {
+        else if (c != separator && str_size >= result_max_size - 1u){
             fprintf(stderr, "Max string length reached: %u \n", result_max_size);
             exit(EXIT_FAILURE);
         }

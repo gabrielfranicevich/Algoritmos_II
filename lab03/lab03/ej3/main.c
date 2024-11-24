@@ -1,7 +1,7 @@
-/*
-  @file main.c
-  @brief Main program function implementation
-*/
+/**
+ * @file main.c
+ * @brief Main program function implementation
+ */
 /* First, the standard lib includes, alphabetically ordered */
 #include <assert.h>
 #include <stdio.h>
