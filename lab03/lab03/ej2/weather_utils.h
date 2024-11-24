@@ -1,3 +1,9 @@
+/**
+ * @file weather_utils.h
+ * @brief el programa ahora corre con
+ * gcc -Wall -Werror -Wextra -pedantic -std=c99 -c array_helpers.c weather.c weather_utils.c main.c
+ * gcc -Wall -Werror -Wextra -pedantic -std=c99 array_helpers.o weather.o main.o weather_utils.o -o weather
+ */
 #ifndef _WEATHER_UTILS_H
 #define _WEATHER_UTILS_H
 
@@ -21,10 +27,3 @@ void procedimiento(WeatherTable a, int output[YEARS]);
 void mes_max_prec(WeatherTable date, month_t output[YEARS]);
 
 #endif
-
-/**
- * @file weather_utils.h
- * @brief el programa ahora corre con
- * gcc -Wall -Werror -Wextra -pedantic -std=c99 -c array_helpers.c weather.c weather_utils.c main.c
- * gcc -Wall -Werror -Wextra -pedantic -std=c99 array_helpers.o weather.o main.o weather_utils.o -o weather
- */

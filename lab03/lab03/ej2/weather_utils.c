@@ -1,6 +1,6 @@
-/*
-  @file weather_utils.c
-*/
+/**
+ * @file weather_utils.c
+ */
 #include <stdbool.h>
 #include "array_helpers.h"
 #include "weather_utils.h"

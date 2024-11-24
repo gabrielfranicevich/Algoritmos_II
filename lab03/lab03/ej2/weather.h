@@ -1,8 +1,7 @@
-/*
-  @file weather.h
-  @brief Defines weather mesuarement structure and methods
-*/
-
+/**
+ * @file weather.h
+ * @brief Defines weather mesuarement structure and methods
+ */
 #ifndef _WEATHER_H
 #define _WEATHER_H
 #define EXPECTED_WEATHER_FILE_FORMAT "%d %d %d %u %u %u"
@@ -10,9 +9,10 @@
                                 weather._pressure, weather._moisture, weather._rainfall
 #include <stdio.h>
 
-/** @brief Type used to represent a weather mesuarement.*/
-typedef struct _weather
-{
+/** 
+ * @brief Type used to represent a weather mesuarement.
+ */
+typedef struct _weather {
     int _average_temp;
     int _max_temp;
     int _min_temp;

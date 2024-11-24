@@ -1,7 +1,7 @@
-/*
-  @file weather.c
-  @brief Implements weather mesuarement structure and methods
-*/
+/**
+ * @file weather.c
+ * @brief Implements weather mesuarement structure and methods
+ */
 #include <stdlib.h>
 #include "weather.h"
 

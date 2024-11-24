@@ -1,7 +1,7 @@
-/*
-  @file array_helpers.c
-  @brief Array Helpers method implementation
-*/
+/**
+ * @file array_helpers.c
+ * @brief Array Helpers method implementation
+ */
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>

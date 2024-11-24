@@ -1,7 +1,7 @@
-/*
-  @file array_helpers.h
-  @brief defines array helpers methods. These methods operates over multidimensional (year, month, day) array of weather
-*/
+/**
+ * @file array_helpers.h
+ * @brief defines array helpers methods. These methods operates over multidimensional (year, month, day) array of weather
+ */
 #ifndef _ARRAY_HELPERS_H
 #define _ARRAY_HELPERS_H
 
