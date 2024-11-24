@@ -8,6 +8,7 @@
 #include <stdlib.h>
 
 #include "array_helpers.h"
+#include "weather.h"
 
 
 /**
@@ -24,11 +25,16 @@ static bool is_last_line(unsigned int year, unsigned int month, unsigned int day
 
 
 void array_dump(WeatherTable a) {
+
     for (unsigned int year = 0u; year < YEARS; ++year) {
+
         for (month_t month = january; month <= december; ++month) {
+
             for (unsigned int day = 0u; day < DAYS; ++day) {
+
                 fprintf(stdout, "%u %u %u ", year + FST_YEAR, month + 1, day + 1);
                 weather_to_file(stdout, a[year][month][day]);
+
                 if (!is_last_line(year, month, day))
                 {
                     fprintf(stdout, "\n");

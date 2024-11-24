@@ -1,20 +1,20 @@
-/*
-  @file main.c
-  @brief Defines main program function
-*/
-/* 
-weather_cordoba.in
-
-1980 1 1 211 290 130 10130 54 0
-1980 1 2 218 310 120 10070 53 0
-1980 1 3 247 320 160 10058 51 0
-
-Las primeras 3 columnas corresponden a año, mes y dia
-Las restantes 6 son temp media, maxima, minima, presion atmos, humedad y precipitaciones
-
-Las temperaturas estan medidas en grados centigrados, pero expresadas en decimas
-La presion multiplicada por 10 y las precipitaciones por 100
-*/
+/**
+ * @file main.c
+ * @brief Defines main program function
+ */
+/**
+ * weather_cordoba.in
+ * 
+ * 1980 1 1 211 290 130 10130 54 0
+ * 1980 1 2 218 310 120 10070 53 0
+ * 1980 1 3 247 320 160 10058 51 0
+ * 
+ * Las primeras 3 columnas corresponden a año, mes y dia
+ * Las restantes 6 son temp media, maxima, minima, presion atmos, humedad y precipitaciones
+ * Las temperaturas estan medidas en grados centigrados, pero expresadas en decimas
+ * La presion multiplicada por 10 y las precipitaciones por 100
+ * 
+ */
 
 /* First, the standard lib includes, alphabetically ordered */
 #include <assert.h>
@@ -23,6 +23,8 @@ La presion multiplicada por 10 y las precipitaciones por 100
 
 /* Then, this project's includes, alphabetically ordered */
 #include "array_helpers.h"
+#include "weather_utils.h"
+
 
 /**
  * @brief print usage help
@@ -86,30 +88,29 @@ int main(int argc, char *argv[]) {
     /* show the ordered array in the screen */
     array_dump(array);
 
-    //Parte b
-        // 1
-    printf("la menor temperatura minima fue:%d\n",minmintemp(array));
-        //2
-    int i=0, año=FST_YEAR , out[YEARS];
-    procedimiento(array, out);
+    int mmtemp = 0;
+    mmtemp = minmintemp(array);
+    printf("la menor temperatura minima fue:%d\n",mmtemp);
+    
+    int i=0, anno=FST_YEAR , out[YEARS];
+    //  procedimiento(array, out);
     printf("la temperatura minima en cada año fue:\n[");
-    while (i<YEARS-1)
-    {
-        printf("%d: %d, ", año, out[i]);
-        i=i+1; año=año+1;
+    while (i<YEARS-1) {
+        printf("%d: %d, ", anno, out[i]);
+        i=i+1; anno=anno+1;
     }
-    printf("%d: %d]\n", año, out[i]);
-        //3
-    año=FST_YEAR, i=0;
+    printf("%d: %d]\n", anno, out[i]);
+
+    anno=FST_YEAR, i=0;
     month_t output[YEARS];
-    mes_max_prec(array, output);
+    //  mes_max_prec(array, output);
     printf("el mes con mas precipitaciones en cada año fue:\n[");
     while (i<YEARS-1)
     {
-        printf("%d: %d, ", año, output[i]);
-        i=i+1; año=año+1;
+        printf("%d: %d, ", anno, output[i]);
+        i=i+1; anno=anno+1;
     }
-    printf("%d: %d]\n", año, output[i]);
+    printf("%d: %d]\n", anno, output[i]);
 
 
     return (EXIT_SUCCESS);
