@@ -35,6 +35,9 @@ char *parse_filepath(int argc, char *argv[]) {
 float average(list l) {
     float sum = 0.0f;
     nat count = 0u, length = list_length(l);
+    if (!length){
+        return 0.0f;
+    }
     while (count < length) {
         sum += list_index(l, count);
         ++count;
