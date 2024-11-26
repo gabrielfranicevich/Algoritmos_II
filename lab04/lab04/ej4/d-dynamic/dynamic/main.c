@@ -27,8 +27,8 @@ void print_help(char *program_name) {
 char *parse_filepath(int argc, char *argv[]) {
     /* Parse the filepath given by command line argument. */
     char *result = NULL;
-    // Program takes exactly two arguments
-    // (the program's name itself and the input-filepath)
+    //  Program takes exactly two arguments
+    //  (the program's name itself and the input-filepath)
     bool valid_args_count = (argc == 2);
 
     if (!valid_args_count) {
@@ -48,17 +48,16 @@ int main(int argc, char *argv[]) {
     /* parse the filepath given in command line arguments */
     filepath = parse_filepath(argc, argv);
     
-    size_t length=0;
-    // parse the file and returns the array storing the actual size in <length>
-    int *array=array_from_file(filepath, &length);
+    size_t length = 0;
+    //  parse the file and returns the array storing the actual size in <length>
+    int *array = array_from_file(filepath, &length);
     
-    /*dumping the array*/
+    /* dumping the array */
     array_dump(array, length);
     
-    // 
-    // COMPLETAR: Liberar la memoria usada por <array>
-    //
-    
+    //  free libera memoria reservada
+    free(array);
+
     return EXIT_SUCCESS;
 }
 

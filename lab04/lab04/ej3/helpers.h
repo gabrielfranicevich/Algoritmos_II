@@ -1,7 +1,7 @@
-/*
-  @file helpers.h
-  @brief player helper functions declaration
-*/
+/**
+ * @file helpers.h
+ * @brief player helper functions declaration
+ */
 #ifndef _HELPERS_H
 #define _HELPERS_H
 #include <stdbool.h>

@@ -33,9 +33,12 @@ int * array_from_file(const char *filepath, size_t *length) {
         fprintf(stderr, "Invalid array.\n");
         exit(EXIT_FAILURE);
     }
-    int *array=NULL;
+    int *array = NULL;
     
-    array = malloc(sizeof(int) * size);
+    //  malloc reserva memoria del tamaño en bytes
+    //  entonces, se guarda el tamaño del array * el tamaño de su contenido en bytes
+    array = malloc(size * sizeof(int));
+
     *length = size;
 
     if (size > 0 && array == NULL) {
@@ -51,6 +54,7 @@ int * array_from_file(const char *filepath, size_t *length) {
        ++i;
     }
     fclose(file);
+    
     return array;
 }
 

@@ -8,38 +8,43 @@ typedef struct _counter * counter;
 
 
 /* Constructors */
+
+/**
+ * Create a new counter with initial value. Allocates new memory.
+ * 
+ * Being c the returned counter, counter_is_init(c) should be true.
+ */
 counter counter_init(void);
-/*
-    Create a new counter with initial value. Allocates new memory.
-    Being c the returned counter, counter_is_init(c) should be true.
-*/
 
+/**
+ * Increments the counter c.
+ */
 void counter_inc(counter c);
-/*
-    Increments the counter c.
-*/
-
 
 /* Operations */
+
+/**
+ * Return whether the counter c has the initial value.
+ */
 bool counter_is_init(counter c);
-/*
-    Return whether the counter c has the initial value.
-*/
 
+/**
+ * Decrements the counter c.
+ * PRECONDITION: !counter_is_init(c)
+ */
 void counter_dec(counter c);
-/*
-    Decrements the counter c.
-    PRECONDITION: !counter_is_init(c)
-*/
 
+/**
+ * Makes a copy of counter c. Allocates new memory.
+ */
 counter counter_copy(counter c);
-/*
-    Makes a copy of counter c. Allocates new memory.
-*/
 
+/**
+ * Frees memory for c.
+ */
 void counter_destroy(counter c);
-/*
-   Frees memory for c.
-*/
+
+unsigned int counter_count(counter c);
+
 
 #endif

@@ -1,13 +1,15 @@
 #ifndef _PAIR_H
 #define _PAIR_H
 
+/**
+ * array de dos enteros, values[0], values[1]
+ */
 typedef struct s_pair_t pair_t;
 
 struct s_pair_t {
     int values[2];
 };
 
-pair_t pair_new(int x, int y);
 /*
  * DESC: Creates a new pair with components (x, y)
  *
@@ -15,8 +17,8 @@ pair_t pair_new(int x, int y);
  *
  * POS: {p --> (x, y)}
  */
+pair_t pair_new(int x, int y);
 
-int pair_first(pair_t p);
 /*
  * DESC: Returns the first component of p
  *
@@ -26,8 +28,8 @@ int pair_first(pair_t p);
  *
  * POS: {fst == x}
  */
+int pair_first(pair_t p);
 
-int pair_second(pair_t p);
 /*
  * DESC: Returns the second component of p
  *
@@ -37,8 +39,8 @@ int pair_second(pair_t p);
  *
  * POS: {snd == y}
  */
+int pair_second(pair_t p);
 
-pair_t pair_swapped(pair_t p);
 /*
  * DESC: Return a NEW pair with the components of p reversed
  *
@@ -49,12 +51,12 @@ pair_t pair_swapped(pair_t p);
  * POS: {pair_first(q) == pair_second(p) && pair_second(q) == pair_first(p)}
  *
  */
+pair_t pair_swapped(pair_t p);
 
-pair_t pair_destroy(pair_t p);
 /*
  * DESC: Free memory if its necesary
  *
  */
-
+pair_t pair_destroy(pair_t p);
 
 #endif

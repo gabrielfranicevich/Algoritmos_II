@@ -3,8 +3,6 @@
 
 #define NAME_MAXSIZE 30
 
-/* name_t es un tipo de dato, el cual es un arreglo de char */
-// Basicamente, name_t es un alias que usamos en vez de escribir char *nombre* [NAME_MAXSIZE]
 typedef char name_t [NAME_MAXSIZE];
 
 typedef struct _s_data {

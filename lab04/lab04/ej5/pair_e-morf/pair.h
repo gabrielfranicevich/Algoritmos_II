@@ -1,10 +1,12 @@
 #ifndef _PAIR_H
 #define _PAIR_H
 
+/**
+ * puntero a un par de dos elems, uno es el primero, otro el segundo
+ */
 typedef struct s_pair_t * pair_t;
 typedef int elem;
 
-pair_t pair_new(elem x, elem y);
 /*
  * DESC: Creates a new pair with components (x, y)
  *
@@ -12,8 +14,8 @@ pair_t pair_new(elem x, elem y);
  *
  * POS: {p --> (x, y)}
  */
+pair_t pair_new(elem x, elem y);
 
-elem pair_first(pair_t p);
 /*
  * DESC: Returns the first component of p
  *
@@ -23,8 +25,8 @@ elem pair_first(pair_t p);
  *
  * POS: {fst == x}
  */
+elem pair_first(pair_t p);
 
-elem pair_second(pair_t p);
 /*
  * DESC: Returns the second component of p
  *
@@ -34,8 +36,8 @@ elem pair_second(pair_t p);
  *
  * POS: {snd == y}
  */
+elem pair_second(pair_t p);
 
-pair_t pair_swapped(pair_t p);
 /*
  * DESC: Return a NEW pair with the components of p reversed
  *
@@ -46,12 +48,12 @@ pair_t pair_swapped(pair_t p);
  * POS: {pair_first(q) == pair_second(p) && pair_second(q) == pair_first(p)}
  *
  */
+pair_t pair_swapped(pair_t p);
 
-pair_t pair_destroy(pair_t p);
 /*
  * DESC: Free memory if its necesary
  *
  */
-
+pair_t pair_destroy(pair_t p);
 
 #endif

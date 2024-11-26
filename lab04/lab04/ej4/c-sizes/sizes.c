@@ -20,58 +20,32 @@ int main(void) {
     printf("name-size  : %lu bytes\n"
            "age-size   : %lu bytes\n"
            "height-size: %lu bytes\n"
-           "data_t-size: %lu bytes\n", sizeof(messi.name), 
-                                       sizeof(messi.age), 
-                                       sizeof(messi.height),
-                                       sizeof(messi.name) + sizeof(messi.age) + sizeof(messi.height));
+           "data_t-size: %lu bytes\n", 
+           sizeof(messi.name),
+           sizeof(messi.age),
+           sizeof(messi.height),
+           sizeof(messi));
 
-    unsigned int *p = NULL;
-    data_t *q = NULL;
-
-    printf("Memory directions: \n");
-    p = &messi.age;
-    printf("name memory address  : %p\n", (void *) p);
-    p = &messi.age;
-    printf("age memory address   : %p\n", (void *) p);
-    p = &messi.height;
-    printf("height memory address: %p\n", (void *) p);
-    q = &messi;
-    printf("data_t memory address: %p\n\n", (void *) q);
-
-    printf("Memory indexes: \n");
-    p = &messi.age;
-    printf("name memory address  : %lu\n", (uintptr_t) p);
-    p = &messi.age;
-    printf("age memory address   : %lu\n", (uintptr_t) p);
-    p = &messi.height;
-    printf("height memory address: %lu\n", (uintptr_t) p);
-    printf("data_t memory address: %lu\n", (uintptr_t) q);
-
+    printf(
+        "name-direction  : %p\n"
+        "age-direction   : %p\n"
+        "heigh-direction : %p\n"
+        "data_t-direction: %p\n",
+        (void *) &messi.name,
+        (void *) &messi.age,
+        (void *) &messi.height,
+        (void *) &messi
+    );
+    printf(
+        "name-index  : %lu\n"
+        "age-index   : %lu\n"
+        "height-index: %lu\n"
+        "data_t-index: %lu\n",
+        (uintptr_t) &messi.name,
+        (uintptr_t) &messi.age,
+        (uintptr_t) &messi.height,
+        (uintptr_t) &messi
+    );
     return EXIT_SUCCESS;
 }
 
-/*
-    NOMBRE: Leo Messi
-    EDAD  : 36 años
-    ALTURA: 169 cm
-
-    name-size  : 30 bytes
-    age-size   : 4 bytes
-    height-size: 4 bytes
-    data_t-size: 38 bytes
-
-    Memory directions: 
-    name memory address  : 0x7ffe42897240
-    age memory address   : 0x7ffe42897240
-    height memory address: 0x7ffe42897244
-    data_t memory address: 0x7ffe42897220
-
-    Memory indexes: 
-    name memory address  : 140730014724672
-    age memory address   : 140730014724672
-    height memory address: 140730014724676
-    data_t memory address: 140730014724640
-*/
-/*
-    La suma de los miembros de la estructura coincide con el total de memoria utilizada.
-*/

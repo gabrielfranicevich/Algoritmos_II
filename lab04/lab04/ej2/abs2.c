@@ -2,21 +2,26 @@
 #include <stdio.h>
 #include <assert.h>
 
+//  *y = el valor de y, &y la dirección de y
 void absolute(int x, int *y) {
+    printf("%d\n", *y);
     if (x >= 0) {
         *y = x;
     } else {
         *y = -x;
     }
+    printf("%d\n", *y);
 }
 
 int main(void) {
-    int a=0, res=0;  
-    a = -10; // aca res = 0
+    int a = 0, res = 0;  
+    a = -10;    //  aca res = 0
 
-    absolute(a, &res); // y aca res vale 10
+    printf("res dir: %d, res val: %d\n", &res, res);
 
-    printf("%d\n", &res);
+    absolute(a, &res);  //  y aca res vale 10
+
+    printf("res dir: %d, res val: %d\n", &res, res);
 
     assert(res >= 0 && (res == a || res == -a));
     return EXIT_SUCCESS;

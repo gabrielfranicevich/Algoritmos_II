@@ -30,8 +30,8 @@ void print_help(char *program_name) {
 char *parse_filepath(int argc, char *argv[]) {
     /* Parse the filepath given by command line argument. */
     char *result = NULL;
-    // Program takes exactly two arguments
-    // (the program's name itself and the input-filepath)
+    //  Program takes exactly two arguments
+    //  (the program's name itself and the input-filepath)
     bool valid_args_count = (argc == 2);
 
     if (!valid_args_count) {
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     
     /* create an array of MAX_SIZE elements */
     int array[MAX_SIZE];
-    
+
     /* parse the file to fill the array and obtain the actual length */
     unsigned int length = array_from_file(array, MAX_SIZE, filepath);
     
