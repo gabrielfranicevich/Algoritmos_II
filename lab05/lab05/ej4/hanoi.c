@@ -27,10 +27,12 @@ hanoi_t hanoi_init(unsigned int disk_count) {
     hanoi_t hanoi = malloc(sizeof(struct _hanoi));
     assert(hanoi != NULL);
     hanoi->aux = stack_empty();
-    hanoi->target = NULL;
-    hanoi->target = stack_empty();  //incializar target
+    
+    //  when stack inits in null, not initializing is not a problem
+    hanoi->target = stack_empty();  //  init targrt
+    hanoi->source = stack_empty();  //  init source
+    
     hanoi->disk_count = disk_count;
-    hanoi->source=stack_empty();    //inicializar source
     for (unsigned int i = disk_count; i > 0; --i) {
         hanoi->source = stack_push(hanoi->source, i);
     }
@@ -48,9 +50,10 @@ void hanoi_print(hanoi_t hanoi) {
 
 hanoi_t hanoi_destroy(hanoi_t hanoi) {
     assert(hanoi != NULL);
-    stack_destroy(hanoi->aux);      //destroy para sack aux
-    stack_destroy(hanoi->source);   //destroy para sack source
-    stack_destroy(hanoi->target);   //destroy para sack target
+    //  free inner stacks
+    stack_destroy(hanoi->source);   //  free source memory
+    stack_destroy(hanoi->aux);      //  free aux memory
+    stack_destroy(hanoi->target);   //  free target memory
     free(hanoi);
     return NULL;
 }

@@ -51,16 +51,30 @@ int main(int argc, char *argv[]) {
     filepath = parse_filepath(argc, argv);
     
     // parse the file and returns the loaded queue
-    queue q=queue_from_file(filepath);
+    queue q = queue_from_file(filepath);
     
     /*dumping the queue */
     printf("length: %u\n", queue_size(q));
     queue_dump(q, stdout);
+    
+    char c = 'a';
+    while (queue_size(q) > 0 && c != 'q') {
+        printf("\nq to quit, any other key to continue:\n");      
+        c = getchar();
+        
+        if (c != 'q'){
+            queue_user_disscard(q); 
+            printf("length: %u\n", queue_size(q));
+            queue_dump(q, stdout);
+        }
+        while (getchar() != '\n');
+    }
+    if(queue_size(q) == 0){
+        printf("\nHas llegado al final de la cola\n\n");
+    }
 
-    q = queue_user_disscard(q);
-    queue_dump(q, stdout);
-
-    queue_destroy(q); 
+    queue_destroy(q);
+    
     return EXIT_SUCCESS;
 }
 

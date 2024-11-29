@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
         printf("Usage: ./solve-hanoi <disk-count>\n");
         exit(EXIT_FAILURE);
     }
-    int count = atoi(argv[1]);
+    int count = atoi(argv[1]);  //  atoi turns string into int
     if (count < 0) {
         printf("Negative disk-count is not allowed\n");
         exit(EXIT_FAILURE);

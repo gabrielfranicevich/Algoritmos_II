@@ -1,10 +1,10 @@
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -pedantic -std=c99 -g
-SOURCES = stack.c hanoi.c main.c
+SOURCES = ../stack.c reverse.c array_helpers.c
 OBJECTS = $(SOURCES:.c=.o)
-TARGET = solve-hanoi
+TARGET = reverse
 
-.PHONY: clean run val
+.PHONY: clean
 
 all: $(TARGET)
 
@@ -16,13 +16,3 @@ $(TARGET): $(OBJECTS)
 
 clean:
 	$(RM) $(OBJECTS) $(TARGET)
-
-#
-run: all
-	@./solve-hanoi $(filter-out $@,$(MAKECMDGOALS))
-
-val: all
-	@valgrind --leak-check=full ./solve-hanoi $(filter-out $@,$(MAKECMDGOALS))
-
-%:
-	@:

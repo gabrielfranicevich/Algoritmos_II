@@ -6,26 +6,18 @@
 #define MAX_LENGTH 1820
 
 char *string_clone(const char *str, size_t length) {
-    //char clon[MAX_LENGTH];
-    char *output=malloc(MAX_LENGTH * sizeof(char));
-    for (size_t i=0; i<length;i++) {
+    //  char clon[MAX_LENGTH];
+    char *output = malloc((length + 1) * sizeof(char));
+    for (size_t i = 0; i < length; i++) {
         output[i] = str[i];
     }
     output[length] = '\0';
     return output;
 }
 
-size_t strlength (const char *str){
-    size_t length = 0;
-    while (str[length] != '\0') {
-        length++;
-    }
-    return length;
-}
-
 
 int main(void) {
-    char *original=""
+    char original[] = ""
          "______ time ago in a galaxy far, far away...\n\n\n"
          ANSI_BRGOLD
          "         _______..___________.     ___      .______             \n"
@@ -62,11 +54,12 @@ int main(void) {
          "                an    ARMY    OF   THE   REPUBLIC\n"
          "                to    assist    the   overwhelmed\n"
          "                Jedi....\n" ANSI_WHITE;
-    
-    
-    char *copy=NULL;
+    char *copy = NULL;
 
-    copy = string_clone(original, strlength(original));
+    //  ´sizeof(original)´ devuelve el tamaño del array en bytes
+    //  ´sizeof(*original)´ devuelve el tamaño de un elemento en bytes 
+    copy = string_clone(original, sizeof(original) / sizeof(*original));
+    
     printf("Original:\n" ANSI_CYAN
             " %s\n", original);
     copy[0] = 'A';
@@ -75,10 +68,12 @@ int main(void) {
     copy[3] = 'o';
     copy[4] = 'n';
     copy[5] = 'g';
+
     printf("Copia   :\n" ANSI_CYAN
            " %s\n", copy);
+
     free(copy);
 
     return EXIT_SUCCESS;
 }
-//el cambio de tipo no funciona porque la longitud del string no estaba bien calculada
+

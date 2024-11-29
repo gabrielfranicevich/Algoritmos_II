@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "stack.h"
-#include <stdio.h>
 
 struct _s_stack {
     stack_elem *elems;      // Arreglo de elementos
@@ -9,60 +8,63 @@ struct _s_stack {
     unsigned int capacity;  // Capacidad actual del arreglo elems
 };
 
-stack stack_empty(){
-    stack s=malloc(sizeof(struct _s_stack));
-    if (s == NULL) {fprintf(stderr,"stack allocation failed\n");exit(EXIT_FAILURE);}
-    s->elems=malloc(sizeof(stack_elem));
-    if (s->elems == NULL) {fprintf(stderr,"elem allocation failed\n");exit(EXIT_FAILURE);}
-    s->size=0;
-    s->capacity=1;
+stack stack_empty() {
+    stack s = malloc(sizeof(struct _s_stack));
+    s->size = 0;
+    s->capacity = 1;
+    s->elems = malloc(sizeof(stack_elem));;
     return s;
 }
+
 bool invrep(stack s){
-    return (s!=NULL && s->size<=s->capacity);
+    return (s != NULL && (s->size <= s->capacity));
 }
+
 stack stack_push(stack s, stack_elem e){
     assert(invrep(s));
-    if (s->size==s->capacity)
-    {
-        s->capacity=2*(s->capacity);
-        s->elems=realloc(s->elems,s->capacity*sizeof(stack_elem));
-        if (s->elems == NULL) {fprintf(stderr,"reallocation failed\n");exit(EXIT_FAILURE);}
+    if (s->size == s->capacity){
+        s->elems = realloc(s->elems, (s->capacity * 2) * sizeof(stack_elem));
+        s->capacity = s->capacity * 2;
     }
-    s->elems[s->size]=e;
+    s->elems[s->size] = e;
     s->size++;
+    
     return s;
 }
+
 stack stack_pop(stack s){
     assert(invrep(s));
-    if (s->size == 0) {fprintf(stderr,"stack_pop fail: empty stack\n");exit(EXIT_FAILURE);}
     s->size--;
     return s;
 }
+
 unsigned int stack_size(stack s){
     assert(invrep(s));
     return s->size;
 }
+
 stack_elem stack_top(stack s){
     assert(invrep(s));
-    if (s->size == 0) {fprintf(stderr,"stack_top fail: empty stack\n");exit(EXIT_FAILURE);}
-    return s->elems[s->size-1];
+    return s->elems[s->size - 1];
 }
+
 bool stack_is_empty(stack s){
     assert(invrep(s));
-    return (s->size==0);
+    return s->size == 0;
 }
-stack_elem *stack_to_array(stack s){
+
+stack_elem * stack_to_array(stack s){
     assert(invrep(s));
-    stack_elem *arr=malloc(s->size*sizeof(stack_elem));
-    if (arr == NULL) {fprintf(stderr,"array allocation failed\n");exit(EXIT_FAILURE);}
-    for (size_t i = 0; i < s->size; i++)
-    {
-        arr[i]=s->elems[i];
+    unsigned int i = 0, size = stack_size(s);
+    stack_elem * array = malloc(sizeof(stack_elem) * size);
+    while(i < size){
+        array[i] = s->elems[size - i - 1];
+        i++;
     }
-    return arr;
+    return array;
 }
-stack stack_destroy(stack s){
+
+stack stack_destroy (stack s) {
     assert(invrep(s));
     free(s->elems);
     free(s);

@@ -6,8 +6,8 @@
 #define MAX_LENGTH 1820
 
 char *string_clone(const char *str, size_t length) {
-    //char clon[MAX_LENGTH];
-    char *output=malloc(MAX_LENGTH * sizeof(char));
+    char clon[MAX_LENGTH];
+    char *output=clon;
     for (size_t i=0; i<length;i++) {
         output[i] = str[i];
     }
@@ -67,10 +67,7 @@ int main(void) {
     copy[5] = 'g';
     printf("Copia   :\n" ANSI_CYAN
            " %s\n", copy);
-    free(copy);
 
     return EXIT_SUCCESS;
 }
 
-//tamaño del array dinamico mal reservado
-//despues de corregirlo, al usar malloc hay que liberarlo

@@ -6,8 +6,8 @@
 
 int main(void) {
     char *some_str="h.o.l.a m.u.n.d.o.!";
-    char *some_symmetric="abcba";
-    char *some_asymmetric="ab";
+    char *some_symmetric="abscsba";
+    char *some_asymmetric="abs";
     char *filtered=NULL;
 
     filtered = string_filter(some_str, '.');
