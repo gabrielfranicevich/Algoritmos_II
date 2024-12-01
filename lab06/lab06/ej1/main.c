@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "abb.h" /* TAD abb */
 
@@ -59,6 +60,84 @@ abb abb_from_file(const char *filepath) {
     return read_tree;
 }
 
+void ui_help(){
+    printf("\nPress:\n"
+                "p to print\n"
+                "a to add an element\n"
+                "d to delete an element\n"
+                "e to check if an element exists\n"
+                "l to show the length\n"
+                "r to show the root, max and min\n"
+                "q to quit\n");
+        
+}
+
+void user_dump_abb(abb *tree_ptr){
+    abb tree = *tree_ptr;
+    printf("\nwrite:\n"
+            "´pre´ to pre order\n"
+            "´in´ to in order\n"
+            "´post´ to post order\n");
+    char dump[10];
+    if (fscanf(stdin, "%s", dump) != 1) {
+        printf("Input error\n");
+        return;
+    }
+    
+    int res = strcmp(dump, "pre") == 0 ? ABB_PRE_ORDER : 
+            strcmp(dump, "in") == 0 ? ABB_IN_ORDER : 
+            strcmp(dump, "post") == 0 ? ABB_POST_ORDER : -1;
+    
+    if (res != -1){
+        abb_dump(tree, res);
+        printf("\n");
+    }else{
+        printf("\nfailed to print, invalid order.\n");
+    }
+}
+
+abb user_add_elem(abb * tree_ptr){
+    abb tree = *tree_ptr;
+    printf("\nwrite an elem you want to add\n");
+    abb_elem add;
+    if (fscanf(stdin, "%d", &add) != 1) {
+        printf("Input error\n");
+        return tree;
+    }
+    tree = abb_add(tree, add);
+    return tree;
+}
+
+abb user_delete_elem(abb * tree_ptr){
+    abb tree = *tree_ptr;
+    printf("\nwrite the elem you want to delete\n");
+    abb_elem delete;
+    if (fscanf(stdin, "%d", &delete) != 1) {
+        printf("Input error\n");
+        return tree;
+    }
+    tree = abb_remove(tree, delete);
+    
+    return tree;
+}
+
+void user_check_exist(abb * tree_ptr){
+    abb tree = *tree_ptr;
+    printf("\nwrite the elem you want to check\n");
+    abb_elem check;
+    if (fscanf(stdin, "%d", &check) != 1) {
+        printf("Input error\n");
+        return;
+    }
+    if (abb_exists(tree, check)){
+        printf("\n´%d´ exists\n", check);
+
+    } else{
+        printf("\n´%d´ doesn't exist\n", check);
+    }
+    
+}
+
 int main(int argc, char *argv[]) {
     char *filepath = NULL;
 
@@ -78,27 +157,36 @@ int main(int argc, char *argv[]) {
     } else {
         printf("\nÁrbol vacío\n");
     }
+    
+    unsigned int length = abb_length(tree);
+
+    char c = '\0';
+    ui_help();
+    while (c != 'q') {
+        c = getchar();
+        if (c != 'q'){
+            switch(c) {
+                case 'p': user_dump_abb(&tree); break;
+                case 'a': user_add_elem(&tree); break;
+                case 'd': user_delete_elem(&tree); break;
+                case 'e': user_check_exist(&tree); break;
+                case 'l': 
+                    length = abb_length(tree);
+                    printf("\nthe length of the tree is: %u\n", length);
+                    break;
+                case 'r': {
+                    abb_elem root = abb_root(tree);
+                    abb_elem min = abb_min(tree);
+                    abb_elem max = abb_max(tree);
+                    printf("\nraiz: %d\n minimo: %d\n maximo: %d\n", root, min, max);
+                    break;
+                }
+                default: ui_help(); break;
+            }
+        }
+    }
 
     tree = abb_destroy(tree);
-    /*
-     * Modificar e implementar con un ciclo una interfaz que permita al usuario
-     * realizar una de las siguientes operaciones en cada iteración:
-     *
-     * 1 ........ Mostrar árbol por pantalla
-     * 2 ........ Agregar un elemento
-     * 3 ........ Eliminar un elemento
-     * 4 ........ Chequear existencia de elemento
-     * 5 ........ Mostrar longitud del árbol
-     * 6 ........ Mostrar raiz, máximo y mínimo del árbol
-     * 7 ........ Salir
-     *
-     * Se debe solicitar un número de entrada para realizar una de las acciones.
-     *
-     * Para las opciones 2, 3 y 4 se le deberá pedir al usuario que ingrese el
-     * elemento a agregar, eliminar o chequear respectivamente.
-     *
-     * Al salir debe liberarse toda la memoria utilizada.
-     *
-     */
+    
     return (EXIT_SUCCESS);
 }

@@ -4,7 +4,7 @@ SOURCES = abb.c main.c
 OBJECTS = $(SOURCES:.c=.o)
 TARGET = readtree
 
-.PHONY: clean
+.PHONY: clean read val
 
 all: $(TARGET)
 
@@ -16,3 +16,13 @@ $(TARGET): $(OBJECTS)
 
 clean:
 	$(RM) $(OBJECTS) $(TARGET)
+
+#
+read: all
+	@./$(TARGET) $(filter-out $@,$(MAKECMDGOALS))
+
+val: all
+	@valgrind --leak-check=full ./$(TARGET) $(filter-out $@,$(MAKECMDGOALS))
+
+%:
+	@:

@@ -165,6 +165,10 @@ void on_size(dict_t current) {
     printf(RESULT_PREFIX "The size of the dict is %u\n", dict_length(current));
 }
 
+void on_show(dict_t current) {
+    dict_dump(current, stdout);
+}
+
 int main(void) {
     char option = '\0';
     dict_t current = dict_empty();
@@ -173,31 +177,31 @@ int main(void) {
         option = print_menu();
         switch (option) {
             case ADD:
-
+                on_add(current);
                 break;
             case REMOVE:
-
+                on_remove(current);
                 break;
             case REPLACE:
-
+                on_replace(current);
                 break;
             case DUMP:
-
+                on_dump(current);
                 break;
             case EMPTY:
-
+                on_empty(current);
                 break;
             case LOAD:
-
+                on_load(current);
                 break;
             case SEARCH:
-
+                on_search(current);
                 break;
             case SHOW:
-
+                on_show(current);
                 break;
             case SIZE:
-
+                on_size(current);
                 break;
             case QUIT:
                 current = dict_destroy(current);

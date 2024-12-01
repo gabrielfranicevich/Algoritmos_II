@@ -22,13 +22,11 @@ unsigned int string_length(string str) {
 }
 
 bool string_less(const string str1, const string str2) {
-    int cmp = strcmp(str1->content, str2->content);
-    return cmp<0;
+    return (strcmp(str1->content, str2->content) < 0);
 }
 
 bool string_eq(const string str1, const string str2) {
-    int cmp = strcmp(str1->content, str2->content);
-    return (cmp == 0);
+    return (strcmp(str1->content, str2->content) == 0);
 }
 
 string string_clone(const string str) {
@@ -44,7 +42,7 @@ string string_destroy(string str) {
 
 void string_dump(string str, FILE *file) {
     fprintf(file, "%s", str->content);
-}
+}   
 
 const char *string_ref(string str) {
     return (str->content);

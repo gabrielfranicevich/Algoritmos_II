@@ -14,44 +14,81 @@ static bool elem_eq(abb_elem a, abb_elem b) {
     return a == b;
 }
 
+//  a < b
 static bool elem_less(abb_elem a, abb_elem b) {
     return a < b;
 }
 
 static bool invrep(abb tree) {
-    bool b = true;
-    if(tree == NULL || (tree->left == NULL && tree->right == NULL)) b = b && true;
-    else if((tree->right == NULL && tree->elem < tree->left->elem) || 
-            (tree->left == NULL && tree->right->elem < tree->elem)) b = false;        // checks the order
-    else b = invrep(tree->left) && invrep(tree->right);
-    return b;
+    abb lft = tree != NULL ? tree->left : NULL;
+    abb rgt = tree != NULL ? tree->right : NULL;
+
+    //  si tree tiene algun hijo
+    if(tree != NULL && (lft != NULL || rgt != NULL)) {
+        
+        //  si left existe
+        if (lft != NULL) {
+            //  si left está mal ordenado o duplicado
+            if (lft->elem >= tree->elem) {
+                return false;
+            }
+        }
+
+        //  si right existe
+        if (rgt != NULL) {
+            //  si right está mal ordenado o duplicado
+            if (rgt->elem <= tree->elem) {
+                return false;
+            }
+        }
+
+        //  si están bien ordenados se llama a invrep para los hijos
+        return (invrep(lft) && invrep(rgt));
+    }
+    //  si el árbol no tiene hijos o es NULL
+    return true;
 }
 
 abb abb_empty(void) {
     abb tree;
-    tree=NULL;
+
+    //  se inicializa en NULL
+    tree = NULL;
+    
     assert(invrep(tree) && abb_is_empty(tree));
+    return tree;
+}
+
+//  usando direcciones para que no haya memory leaking
+static abb abb_add_rec(abb *tree_ptr, abb_elem e){
+    abb tree = *tree_ptr;
+    //  si el árbol es vacío
+    if (tree == NULL){
+        tree = malloc(sizeof(struct _s_abb));
+        tree -> elem = e;
+        tree -> left = NULL;
+        tree -> right = NULL;
+    
+    //  si el elemento ´e´ es menor al elemento del árbol
+    }else if (elem_less(e, tree -> elem)) {
+        //  se agrega a la izquierda
+        tree -> left = abb_add_rec(&(tree -> left), e);
+
+    //  si el elemento ´e´ es mayor al elemento del árbol
+    } else if (elem_less(tree -> elem, e)) {
+        //  se agrega a la derecha
+        tree -> right = abb_add_rec(&(tree -> right), e);
+    }
     return tree;
 }
 
 abb abb_add(abb tree, abb_elem e) {
     assert(invrep(tree));
-    if (abb_is_empty(tree)){
-        tree = malloc(sizeof(struct _s_abb));
-        tree->elem = e;
-        tree->left=abb_empty();
-        tree->right=abb_empty();
-    }
-    else {
-        abb_elem root=tree->elem;
-        if(elem_less(root,e)){
-            tree->right=abb_add(tree->right,e);
-        }else if(elem_less(e,root)){
-            tree->left=abb_add(tree->left,e);
-        }else{
-            printf("Reapeted elements are not allowed.\n");
-            assert(!elem_eq(root,e));
-        }
+    
+    //  si el elemento no está en el árbol
+    if (!abb_exists(tree, e)){
+        //  se agrega, en función auxiliar para evitar invrep y abb_exists en cada iteración
+        tree = abb_add_rec(&tree, e);
     }
 
     assert(invrep(tree) && abb_exists(tree, e));
@@ -61,54 +98,136 @@ abb abb_add(abb tree, abb_elem e) {
 bool abb_is_empty(abb tree) {
     bool is_empty=false;
     assert(invrep(tree));
-    is_empty = tree == NULL;
+    
+    //  un árbol vacío es nulo según inicialización
+    is_empty = (tree == NULL);
+    
     return is_empty;
 }
 
-bool abb_exists(abb tree, abb_elem e) {
-    bool exists=false;
-    assert(invrep(tree));
-    if(tree==NULL){
-        exists=false;
-    }else if(e==tree->elem){
-        exists=true;
-    }else if(e>tree->elem){
-        exists=abb_exists(tree->right,e);
-    }else{
-        exists=abb_exists(tree->left,e);
+//  usando direcciones para que no haya memory leaking
+static bool abb_exists_rec(abb *tree_ptr, abb_elem e){
+    abb tree = *tree_ptr;
+    
+    //  si el árbol es vacío
+    if(tree == NULL){
+        //  ´e´ no puede existir
+        return false;
+    
+    //  si los elementos son iguales
+    } else if (elem_eq(tree -> elem, e)){
+        //  ´e´ existe
+        return true;
+    
+    //  si el elemento buscado es mayor
+    } else if(elem_less(tree -> elem, e)){
+        //  se busca a la derecha
+        return abb_exists_rec(&(tree -> right), e);
+    
+    //  cc (el elemento buscado es menor)
+    } else {
+        //  se busca a la izquierda
+        return abb_exists_rec(&(tree -> left), e);
     }
-    assert(abb_length(tree)!=0 || !exists);
+}
+
+bool abb_exists(abb tree, abb_elem e) {
+    bool exists = false;
+    assert(invrep(tree));
+
+    //  función auxiliar para evitar invrep en cada iteración
+    exists = abb_exists_rec(&tree, e);
+    
+    assert(abb_length(tree) != 0 || !exists);
     return exists;
 }
 
-unsigned int abb_length(abb tree) {
-    unsigned int length=0;
-    assert(invrep(tree));
-    if(tree != NULL){
-        length = 1 + abb_length(tree->left) + abb_length(tree->right);
+//  usando direcciones para que no haya memory leaking
+static unsigned int abb_length_rec(abb *tree_ptr){
+    abb tree = *tree_ptr;
+    unsigned int length = 0;
+
+    //  si el árbol no es vacío
+    if (tree != NULL) {
+        //  se cuenta el nodo
+        length++;
+
+        //  si existe un elemento a la izquierda
+        if (tree -> left != NULL){
+            //  se cuentan todos los subárboles izquierdos
+            length += abb_length_rec(&(tree -> left));
+        }
+        //  si existe un elemento a la derecha
+        if (tree -> right != NULL){
+            //  se cuentan todos los subárboles derechos
+            length += abb_length_rec(&(tree -> right));
+        }
+        
     }
+    return length;
+}
+
+unsigned int abb_length(abb tree) {
+    unsigned int length = 0;
+    assert(invrep(tree));
+    
+    //  función auxiliar para evitar invrep en cada iteración
+    length = abb_length_rec(&tree);
+    
     assert(invrep(tree) && (abb_is_empty(tree) || length > 0));
     return length;
 }
 
-abb abb_remove(abb tree, abb_elem e) {
-    assert(invrep(tree));
-    if (!abb_is_empty(tree)){
-        abb_elem root=tree->elem;
-        if (root < e){
-            tree->right=abb_remove(tree->right, e);
-        }else if (root > e){
-            tree->left=abb_remove(tree->left, e);  
-        }else if ((e == root) && abb_is_empty(tree->left)){
-            abb right=tree->right;
+static abb abb_remove_rec(abb *tree_ptr, abb_elem e){
+    abb tree = *tree_ptr;
+
+    abb lft = tree != NULL ? tree->left : NULL;
+    abb rgt = tree != NULL ? tree->right : NULL;
+
+    //  el elemento es mayor a la raiz
+    if(elem_less(tree -> elem, e)){
+        //  asumo que el elemento existe, lo busco a la derecha
+        tree -> right = abb_remove_rec(&(tree -> right), e);
+    
+    //  el elemento es menor a la raiz
+    } else if (elem_less(e, tree -> elem)){
+        //  asumo que el elemento existe, lo busco a la izquierda
+        tree -> left = abb_remove_rec(&(tree -> left), e);
+    
+    //  si son iguales
+    } else{
+
+        //  si no hay elemento a la derecha
+        if(rgt == NULL){
             free(tree);
-            tree=right;
-        }else{ 
-            abb_elem min_right = abb_min(tree->right);
-            tree->elem = min_right;
-            tree->right = abb_remove(tree->right, min_right);
+            tree = lft;
+
+        //  si hay elemento a la derecha, pero no a la izquierda
+        } else if (lft == NULL){
+            free(tree);
+            tree = rgt;
+        
+        //  si hay elementos en sus 2 subárboles
+        } else{
+            //  se reeplaza el nodo con el elemento mínimo de la derecha
+            abb_elem rgt_min = abb_min(rgt);
+            tree -> elem = rgt_min;
+
+            //  se este elemento del subárbol derecho
+            tree -> right = abb_remove_rec(&(tree -> right), rgt_min);  
         }
     }
+
+    return tree;
+}
+
+abb abb_remove(abb tree, abb_elem e) {
+    assert(invrep(tree));
+    
+    if (abb_exists(tree, e)){
+        abb_remove_rec(&tree, e);
+    }
+    
     assert(invrep(tree) && !abb_exists(tree, e));
     return tree;
 }
@@ -117,8 +236,8 @@ abb abb_remove(abb tree, abb_elem e) {
 abb_elem abb_root(abb tree) {
     abb_elem root;
     assert(invrep(tree) && !abb_is_empty(tree));
-
-    root=tree->elem;
+    
+    root = tree -> elem;
 
     assert(abb_exists(tree, root));
     return root;
@@ -128,11 +247,10 @@ abb_elem abb_max(abb tree) {
     abb_elem max_e;
     assert(invrep(tree) && !abb_is_empty(tree));
     
-    abb aux=tree;
-    while(aux->right!=NULL){
-        aux=aux->right;
+    while (tree -> right != NULL){
+        tree = tree -> right;
     }
-    max_e=aux->elem;
+    max_e = tree -> elem;
 
     assert(invrep(tree) && abb_exists(tree, max_e));
     return max_e;
@@ -141,46 +259,68 @@ abb_elem abb_max(abb tree) {
 abb_elem abb_min(abb tree) {
     abb_elem min_e;
     assert(invrep(tree) && !abb_is_empty(tree));
-    abb aux=tree;
-    while(aux->left!=NULL){
-        aux=aux->left;
+
+    while (tree -> left != NULL){
+        tree = tree -> left;
     }
-    min_e=aux->elem;
+    min_e = tree -> elem;
+
     assert(invrep(tree) && abb_exists(tree, min_e));
     return min_e;
 }
 
-void abb_dump(abb tree, abb_ordtype ord) {
-    assert(invrep(tree) && (ord==ABB_IN_ORDER  || 
-                            ord==ABB_PRE_ORDER ||
-                            ord==ABB_POST_ORDER));
-    if (tree != NULL) {
+static void abb_dump_rec(abb *tree_ptr, abb_ordtype ord) {
+    abb tree = *tree_ptr;
+    if (tree != NULL) { 
+        //  IN: se imprime al medio
         if (ord == ABB_IN_ORDER) {
-            abb_dump(tree->left, ord);
+            abb_dump_rec(&tree->left, ord);
             printf("%d ", tree->elem);
-            abb_dump(tree->right, ord);
+            abb_dump_rec(&tree->right, ord);
+        
+        //  PRE: se imprime al principio
         } else if (ord == ABB_PRE_ORDER) {
             printf("%d ", tree->elem);
-            abb_dump(tree->left, ord);
-            abb_dump(tree->right, ord);
+            abb_dump_rec(&tree->left, ord);
+            abb_dump_rec(&tree->right, ord);
+
+        //  POST: se imprime al final
         } else if (ord == ABB_POST_ORDER) {
-            abb_dump(tree->left, ord);
-            abb_dump(tree->right, ord);
+            abb_dump_rec(&tree->left, ord);
+            abb_dump_rec(&tree->right, ord);
             printf("%d ", tree->elem);
         }
     }
 }
 
+void abb_dump(abb tree, abb_ordtype ord) {
+    assert(invrep(tree) && (ord == ABB_IN_ORDER  || 
+                            ord == ABB_PRE_ORDER ||
+                            ord == ABB_POST_ORDER));
+
+    if(tree != NULL){
+        abb_dump_rec(&tree, ord);
+    }
+
+}
+
+static abb abb_destroy_rec(abb *tree_ptr){
+    abb tree = *tree_ptr;
+    if (tree != NULL) {
+        abb_destroy_rec(&(tree->left));
+        abb_destroy_rec(&(tree->right));
+        free(tree);
+        tree_ptr = NULL;
+    }
+    return tree;
+}
+
 abb abb_destroy(abb tree) {
     assert(invrep(tree));
-    if(tree!=NULL){
+    
+    tree = abb_destroy_rec(&tree);
+    tree = NULL;
 
-        tree->left=abb_destroy(tree->left);
-        tree->right=abb_destroy(tree->right);
-
-        free(tree);
-        tree=NULL;
-    }
     assert(tree == NULL);
     return tree;
 }
