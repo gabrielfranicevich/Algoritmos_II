@@ -15,7 +15,7 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJECTS) $(TARGET) .gdb_history
+	$(RM) $(OBJECTS) $(TARGET) .gdb_history $(TARGET).exe
 
 #
 dict: all

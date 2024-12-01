@@ -85,7 +85,9 @@ dict_t on_add(dict_t current) {
         word = string_destroy(word);
     } else {
         definition = get_input("Please enter the definition");
+
         current = dict_add(current, word, definition);
+        
         printf(RESULT_PREFIX "The word and definition were added.\n");
     }
     return (current);
@@ -177,22 +179,22 @@ int main(void) {
         option = print_menu();
         switch (option) {
             case ADD:
-                on_add(current);
+                current = on_add(current);
                 break;
             case REMOVE:
-                on_remove(current);
+                current = on_remove(current);
                 break;
             case REPLACE:
-                on_replace(current);
+                current = on_replace(current);
                 break;
             case DUMP:
                 on_dump(current);
                 break;
             case EMPTY:
-                on_empty(current);
+                current = on_empty(current);
                 break;
             case LOAD:
-                on_load(current);
+                current = on_load(current);
                 break;
             case SEARCH:
                 on_search(current);

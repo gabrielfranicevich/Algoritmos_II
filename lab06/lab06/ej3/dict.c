@@ -176,7 +176,7 @@ dict_t dict_add(dict_t dict, key_t word, value_t def) {
         dict = dict_add_not_exist(&dict, word, def);
     }
     
-    //assert(invrep(dict));
+    assert(invrep(dict));
     return dict;
 }
 
@@ -223,12 +223,12 @@ static bool dict_exists_rec(dict_t * dict_ptr, key_t word){
         //  si la palabra actual es mayor a la buscada
         }else if(key_less(word, dict->key)){
             //  se busca a la izquierda
-            return dict_exists(dict->left, word);
+            return dict_exists_rec(&(dict->left), word);
         
         //  cc (si la palabra actual es menor a la buscada)
         } else{
             //  se busca a la derecha
-            return dict_exists(dict->right, word);
+            return dict_exists_rec(&(dict->right), word);
         }
     
     //  si el diccionario es nulo
