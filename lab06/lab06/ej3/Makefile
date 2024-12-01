@@ -15,7 +15,7 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJECTS) $(TARGET)
+	$(RM) $(OBJECTS) $(TARGET) .gdb_history
 
 #
 dict: all
@@ -23,6 +23,9 @@ dict: all
 
 val: all
 	@valgrind --leak-check=full --show-leak-kinds=all ./$(TARGET) $(filter-out $@,$(MAKECMDGOALS))
+
+gdb: all
+	@gdb ./$(TARGET) $(filter-out $@,$(MAKECMDGOALS))
 
 %:
 	@:
