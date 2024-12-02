@@ -13,6 +13,7 @@ struct _node_t {
     value_t value;
 };
 
+//  tupla para guardar un valor del diccionario
 typedef struct s_tuple{
     key_t key;
     value_t value;
@@ -50,7 +51,7 @@ static bool invrep(dict_t d) {
 static dict_t node_declare(key_t key, value_t value){
     dict_t dict = NULL;
 
-    //  se inicializa el diccionario
+    //  se inicializa
     dict = malloc(sizeof(struct _node_t));
     dict->left = NULL;
     dict->right = NULL;
@@ -72,10 +73,12 @@ static dict_t dict_change_def(dict_t * dict_ptr, key_t word, value_t def){
     
     //  si las palabras son iguales
     if(key_eq(word, dict->key)){
-        //  se cambia la definicion
-        dict->key = key_destroy(dict->key);
-        dict->key = word;
+        //  se destruyen strings 
+        dict->key = key_destroy(dict->key);     //  capaz podria destruirse ´word´
         dict->value = value_destroy(dict->value);
+
+        //  se cambian los valores del diccionario
+        dict->key = word;
         dict->value = def;
     
     //  si la palabra es menor a la actual
@@ -201,6 +204,7 @@ bool dict_exists(dict_t dict, key_t word) {
     return false;
 }
 
+//  podria hacerse más simple
 static unsigned int length_rec(dict_t * dict_ptr){
     dict_t dict = *dict_ptr;
     unsigned int length = 0u;
@@ -225,6 +229,7 @@ unsigned int dict_length(dict_t dict) {
     return length;
 }
 
+//  busca el menor key-value en un diccionario
 static tuple dict_min(dict_t dict){
     while (dict->left != NULL){
         dict = dict->left;
@@ -235,7 +240,7 @@ static tuple dict_min(dict_t dict){
     return min;
 }
 
-//  uso direcciones para evitar memory leaking
+//  se podría usar una función auxiliar para liberar un nodo o que reemplace sus valores
 static dict_t remove_rec(dict_t * dict_ptr, key_t word){
     dict_t dict = *dict_ptr;
     dict_t lft = dict != NULL ?dict->left : NULL;
@@ -255,16 +260,23 @@ static dict_t remove_rec(dict_t * dict_ptr, key_t word){
     }else{
         //  si no hay elemento a la izquierda
         if(lft == NULL){
+
+            //  se libera la memoria
             dict->key = key_destroy(dict->key);
             dict->value = value_destroy(dict->value);
             free(dict);
+
+            //  se sube el elemento a la derecha
             dict = rgt;
 
         //  si no hay elemento a la derecha
         } else if(rgt == NULL){
+            //  se libera la memoria
             dict->key = key_destroy(dict->key);
             dict->value = value_destroy(dict->value);
             free(dict);
+
+            //  se sube el elemento a la izquierda
             dict = lft;
 
         //  si hay elementos a derecha e izquierda
@@ -287,6 +299,7 @@ static dict_t remove_rec(dict_t * dict_ptr, key_t word){
 dict_t dict_remove(dict_t dict, key_t word) {
     assert(invrep(dict));
 
+    //  se elimina solo si existe
     if(dict_exists(dict, word)){
         dict = remove_rec(&dict, word);
     }
@@ -297,16 +310,18 @@ dict_t dict_remove(dict_t dict, key_t word) {
 
 static dict_t remove_all_rec(dict_t * dict_ptr){
     dict_t dict = *dict_ptr;
+    
     if (dict!= NULL){
+        //  se borran elementos siguientes
         remove_all_rec(&dict->left);
         remove_all_rec(&dict->right);
     
+        //  se libera la memoria
         dict->key = key_destroy(dict->key);
         dict->value = value_destroy(dict->value);
         free(dict);
         dict_ptr = NULL;
     }
-    
     
     return NULL;
 }
@@ -320,16 +335,21 @@ dict_t dict_remove_all(dict_t dict) {
     return dict;
 }
 
+//  imprime de menor a mayor, IN-ORDER
 static void dump_rec(dict_t * dict_ptr, FILE * file){
     dict_t dict = *dict_ptr;
+    //  recursivo hasta NULL
     if(dict != NULL){
+        //  imprime los menores
         dump_rec(&(dict->left), file);
 
+        //  se imprime a sí mismo
         key_dump(dict->key, file);
         fprintf(file, ": ");
         value_dump(dict->value, file);
         fprintf(stdout, "\n");
 
+        //  imprime los mayores
         dump_rec(&(dict->right), file);
     }
 }
@@ -347,6 +367,7 @@ dict_t dict_destroy(dict_t dict) {
     assert(invrep(dict));
     
     dict = remove_all_rec(&dict);
+    //  no sé por qué este free, pero está bien
     free(dict);
     dict = NULL;
 
