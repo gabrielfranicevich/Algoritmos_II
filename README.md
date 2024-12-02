@@ -589,4 +589,117 @@ q := p
 
 - **surgen** de analizar el problema a resolver
 - **independientes** del lenguaje
+- se definen **especificando** constructores y operaciones
 - se **implementan** usando concretos
+- podemos tener varias implementaciones para un mismo TAD.
+- El problema evidencia qué necesitamos representar y qué operaciones tener.
+
+### Para especificar un TAD debemos
+
+- Indicar su nombre
+- Especificar constructores: procedimientos o funciones mediante los cuales puedo crear elementos del tipo que estoy especificando.
+- Especificar operaciones: todos los procedimientos o funciones que permitirán manipular los elementos del tipo de datos que estoy especificando.
+- Damos los prototipos de las funciones, y mediante lenguaje natural explicamos qué hacen.
+- Algunas operaciones pueden tener restricciones que las indicamos mediante precondiciones.
+- Debemos especificar también una operación de destrucción que libera la memoria utilizada por los elementos del tipo, en caso que sea necesario.
+
+### Implementación de un TAD
+
+- Definir un nuevo tipo con el nombre del TAD especificado. Para ello utilizamos tipos definidos previamente.
+- Implementar cada constructor respetando los tipos tal como fueron especificados.
+- Implementar cada operación respetando los tipos tal como fueron especificados.
+- Implementar operación de destrucción liberando memoria si es que se ha reservado al construir los elementos.
+- Pueden surgir nuevas restricciones que dependen de cómo implementamos el tipo.
+- Puedo necesitar operaciones auxiliares que no están especificadas en el tipo.
+
+### Listas
+
+Las listas son colecciones de elementos de un mismo tipo, de tamaño variable.
+Toda lista o bien es vacía o bien tiene al menos un elemento al comienzo.
+
+Operaciones:
+
+- decidir si una lista es vacía
+- tomar el primer elemento
+- tirar el primer elemento
+- agregar un elemento al final
+- obtener la cantidad de elementos
+- concatenar dos listas
+- obtener el elemento en una posición específica
+- tomar una cantidad arbitraria de elementos
+- tirar una cantidad arbitraria de elementos
+- copiar una lista en una nueva
+
+#### Especificacion Lista
+
+```cs
+spec List of T where
+constructors
+
+  fun empty() ret l: List of T
+  {- crea una lista vacía. -}
+
+  proc addl (in e: T, in/out l: List of T)
+  {- agrega el elemento e al comienzo de la lista l. -}
+
+destroy
+  
+  proc destroy (in/out l: List of T)
+  {- Libera memoria en caso que sea necesario. -}
+
+operations
+  
+  fun is_empty(l : List of T) ret b: bool
+  {- Devuelve True si l es vacía. -}
+
+  fun head(l: List of T) ret e: T
+  {- Devuelve el primer elemento de la lista l -}
+  {- PRE: not is_empty(l) -}
+
+  ...
+```
+
+### Implementación Lista
+
+```cs
+implement List of T where
+
+type Node of T = tuple
+                    elem: T
+                    next: pointer to (Node of T)
+                end tuple
+
+type List of T = pointer to (Node of T)
+
+fun empty() ret l: List of T
+  l := null
+end fun
+
+proc addl (in e: T, in/out l: List of T)
+  var p: pointer to (Node of T)
+  alloc(p)
+  p→elem := e
+  p→next := l
+  l := p
+end proc
+
+fun is_empty(l: List of T) ret b : bool
+  b := l = null
+end fun
+
+{- PRE: not is_empty(l) -}
+fun head(l: List of T) ret e: T
+  e := l -> elem
+end fun
+
+...
+
+proc destroy (in/out l: List of T)
+  var aux: l
+  do l != null->
+    aux := l
+    l := l -> next
+    free(aux)
+  od
+end proc
+```
