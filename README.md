@@ -448,3 +448,145 @@ $$
     \end{cases}
   \end{equation}
 $$  
+
+## Tipos Concretos de Datos
+
+- son provistos por el lenguaje de programación, decimos que son **nativos**
+- **dependientes** del lenguaje
+- enteros, char, string, booleanos, arreglos, reales, enums, tuplas, arrays, punteros
+
+### Enums
+
+- Serie finita de constantes
+
+- definición:
+
+```cs
+type E = enum
+          elem_1
+          ...
+          elem_k
+        end enum
+```
+
+- declaración:
+
+```cs
+  var e: E
+  e := elem_i
+```
+
+- ciclos for:
+
+```cs
+for i := elem_1 to elem_k do ... od
+```
+
+- sus elementos tendrán el orden en que fueron escritos en la definición.
+
+```cs
+elem_1 < elem_2 < ... < elem_k
+```
+
+### Tuplas
+
+- También registros (records) o estructuras (structs)
+- Las tuplas representan productos cartesianos de distintos tipos.
+- Se puede definir un nuevo tipo mediante una tupla de la siguiente forma
+
+```cs
+type tperson = tuple
+                name: string
+                age: int  
+                weight: float
+              end tuple 
+```
+
+- El tipo tperson así definido corresponde al producto `string × nat × real`, y `name`, `age` y `weight` se llaman **campos**.
+
+- declaración:
+
+```cs
+var manu: tperson
+manu.name := "Emmanuel"
+manu.age := 33
+manu.weight := 68
+```
+
+### Arrays
+
+- son colecciones de tamaño fijo de elementos del mismo tipo.
+- el acceso a cada elemento es de tiempo constante
+- declaración:
+
+```cs
+//  `a` tiene `N - M` elementos de tipo `T`
+var a: array[M..N] of T
+```
+
+- tambien los hay multidimencionales
+
+```cs
+//  `b` tiene `(m - n) × (q - p)` elementos de tipo `string`
+var b: array[n..m,p..q] of string
+
+//  para acceder a un elemento:
+b[i, j] := "bijota"
+```
+
+### Punteros
+
+- Dado un tipo T, un **puntero a T**, es un tipo que representa la **dirección de memoria** de un elemento de tipo T.
+
+```cs
+var p: pointer to nat
+```
+
+Mediante punteros el programador puede manipular la memoria disponible al ejecutar un programa.
+
+- Para reservar un bloque de memoria para almacenar un elemento se utiliza la operación `alloc`
+- Puedo acceder al valor apuntado por `p` mediante la operación `*`
+
+```cs
+*p := 10
+```
+
+`p` apunta a 10
+
+- Para liberar un bloque de memoria que reservado se utiliza `free`
+- Existe una constante para representar punteros que no apuntan a nada, `null`
+
+```cs
+var p: pointer to tperson
+alloc(p)
+
+//  *p denota la tperson señalada por p
+
+//  *p.field n permite acceder a la información alojada y modificarla
+*p.name = "Juan"
+
+//  Una notación conveniente para acceder a los campos de una tupla señalada por un puntero es la flecha "→"
+p→name := "Juan"
+
+//  son expresiones equivalentes
+```
+
+Los punteros permiten manejar explícitamente direcciones de memoria.  
+Aparecen situaciones que con los tipos de datos usuales no se daban.
+
+```cs
+//  dos punteros apuntan a la misma direccion
+q := p
+
+//  ahora `*q` tambien es igual a `7`  
+*p := 7
+
+//  si quiero que `p` y `q` tengan el mismo valor pero que no se madifiquen entre ellas
+*q := *p
+```
+
+## Tipos Abstractos de Datos (TADs)
+
+- **surgen** de analizar el problema a resolver
+- **independientes** del lenguaje
+- se **implementan** usando concretos
