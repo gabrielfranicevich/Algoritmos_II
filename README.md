@@ -639,12 +639,12 @@ constructors
   fun empty() ret l: List of T
   {- crea una lista vacía. -}
 
-  proc addl (in e: T, in/out l: List of T)
+  proc addl(in e: T, in/out l: List of T)
   {- agrega el elemento e al comienzo de la lista l. -}
 
 destroy
   
-  proc destroy (in/out l: List of T)
+  proc destroy(in/out l: List of T)
   {- Libera memoria en caso que sea necesario. -}
 
 operations
@@ -659,7 +659,7 @@ operations
   ...
 ```
 
-### Implementación Lista
+#### Implementación Lista
 
 ```cs
 implement List of T where
@@ -675,7 +675,7 @@ fun empty() ret l: List of T
   l := null
 end fun
 
-proc addl (in e: T, in/out l: List of T)
+proc addl(in e: T, in/out l: List of T)
   var p: pointer to (Node of T)
   alloc(p)
   p→elem := e
@@ -694,7 +694,7 @@ end fun
 
 ...
 
-proc destroy (in/out l: List of T)
+proc destroy(in/out l: List of T)
   var aux: l
   do l != null->
     aux := l
@@ -702,4 +702,95 @@ proc destroy (in/out l: List of T)
     free(aux)
   od
 end proc
+```
+
+### Pilas (Stacks)
+
+La pila se define por lo que sabemos: sus cinco operaciones
+
+- inicializar en vacía
+- apilar una nueva obligación (o elemento)
+- comprobar si está vacía
+- examinar la primera obligación (si no está vacía)
+- quitarla (si no está vacía).
+
+las operaciones inicializar y agregar son capaces de generar todas las pilas posibles,  
+comprobar y examinar solamente examinan la pila
+quitarla no genera más valores que los obtenibles por inicializar y agregar  
+
+#### Especificacion Pila
+
+```cs
+spec Stack of T where
+constructors
+
+  fun empty_stack() ret s: Stack of T
+  {- crea una pila vacía. -}
+
+  proc push(in e: T, in/out s: Stack of T)
+  {- agrega el elemento `e` al tope de la pila s. -}
+
+destroy
+  
+  proc destroy(in/out l: Stack of T)
+  {- Libera memoria en caso que sea necesario. -}
+
+operations
+  
+  fun is_empty_stack(s : Stack of T) ret b : Bool
+  {- Devuelve True si la pila es vacía -}
+
+  fun top(s : Stack of T) ret e : T
+  {- Devuelve el elemento que se encuentra en el tope de s. -}
+  {- PRE: not is_empty_stack(s) -}
+
+  proc pop (in/out s : Stack of T)
+  {- Elimina el elemento que se encuentra en el tope de s. -}
+  {- PRE: not is_empty_stack(s) -}
+```
+
+### Colas (Queues)
+
+Puede:
+
+- inicializar vacía,
+- agregar o encolar un dato,
+- comprobar si quedan datos en el buffer, es decir, si es o no vacía
+- examinar el primer dato (el más viejo de los que se encuentran en el buffer),
+- quitar o decolar un dato.
+
+El primer dato que se agregó, es el primero que debe enviarse y quitarse de la cola.
+Las operaciones **vacía** y **encolar** son capaces de generar todas las colas posibles
+**está vacía** y **primero**, en cambio, solamente examinan la cola,
+**decolarla** no genera más valores que los obtenibles por vacía y apilar
+
+####  Especificacion Cola
+
+```cs
+spec Queue of T where
+constructors
+
+  fun empty_queue() ret q: Queue of T
+  {- crea una cola vacía. -}
+
+  proc enqueue(in/out q: Queue of T, in e: T)
+  {- agrega el elemento `e` al final de la cola `q`. -}
+
+destroy
+  
+  proc destroy (in/out l: Stack of T)
+  {- Libera memoria en caso que sea necesario. -}
+
+operations
+  
+  fun is_empty_queue(q: Queue of T) ret b: Bool
+  {- Devuelve True si la cola es vacía -}
+
+  fun first(q: Queue of T) ret e: T
+  {- Devuelve el elemento que se encuentra al comienzo de `q`. -}
+  {- PRE: not is_empty_queue(q) -}
+
+  proc dequeue(in/out q: Queue of T)
+  {- Elimina el elemento que se encuentra al comienzo de `q`. -}
+  {- PRE: not is_empty_queue(q) -}
 ```
