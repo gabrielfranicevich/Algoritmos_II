@@ -40,7 +40,7 @@ Invariante:
 - un segmento inicial `a[1, i)` del arreglo está ordenado, y
 - dicho segmento contiene los elementos mínimos del arreglo.
 
-### Algoritmo
+### Algoritmo Selection Sort
 
 ```cs
 {Pre: n ≥ 0 ∧ a = A} 
@@ -105,7 +105,7 @@ Invariante:
 - un segmento inicial `a[1, i)` del arreglo está ordenado.
 - en general `a[1, i)` no contiene los mínimos del arreglo
 
-### Algoritmo
+### Algoritmo Insertion Sort
 
 ```cs
 {Pre: n ≥ 0 ∧ a = A}
@@ -914,6 +914,9 @@ type Graph = tuple
             end tuple;  
 
 fun Prim(G: Graph, i: Vertex) ret T: Set of Edge
+  //  las aristas de G son los candidatos
+
+  //  c: Candidate
   var e: Edge
   var V: Set of Vertex
   
@@ -1031,3 +1034,57 @@ fun Dijkstra(L: array[1..n, 1..n] of Vertex, v: Vertex) ret D: array[1..n] of Na
   od
 end fun
 ```
+
+## Backtracking
+
+### Forma General Backtracking
+
+```cs
+//  i es un entero que representa el candidato actual
+fun backtracking(C: array[1..n] of Candidate, i: Nat, p : ProbData) ret S : Solution
+  
+  //  si el problema es simple -> se resuelve
+  if(problem_easy(p)) -> S := base_solution(p)
+  
+  //  si se llega al final del arreglo y todavia no se solucionó -> solucion para error
+  else if(i = 0) -> S := error_solution(p)
+
+  //  si no es factible usar el candidato actual, se saltea
+  else if(not is_feasible(C[i])) -> S := backtracking(C, i - 1, p)
+  
+  // en caso contrario
+  else -> S := 
+    //  se comparan las soluciones
+    pick_solution(
+      //  salteando el candidato actual
+      backtracking(C, i - 1, p), 
+      //  usando el candidato actual
+      use_candidate(
+        backtracking(C, i, modify_problem(p, C[i]))
+      )
+    ) 
+  fi
+
+end fun
+```
+
+### Forma Matemática Backtracking
+
+`backtracking` -> $bT()$
+`pick_solution()` -> $pS()$  
+`use_candidate()` -> $uC()$
+`modify_problem()` -> $mP()$  
+
+$$
+\begin{equation}
+  bT(i, p) =
+  \begin{cases}
+    base\text{-}solution(p) & \textup{si } problem\text{-}easy(p) \\
+    error\text{-}solution(p) & \textup{si } i = 0 \land \neg problem\text{-}easy(p)\\
+    bT(i - 1, p) & \textup{si } \neg is\text{-}feasible(d_i) \\
+    pS(bT(i - 1, p), uC(bT(i, mP(p, d_i)))) & \textup{en caso contrario}
+  \end{cases}
+\end{equation}
+$$
+
+no siempre son necesarios el caso erroneo o el caso de salteo  
