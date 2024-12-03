@@ -742,14 +742,14 @@ destroy
 
 operations
   
-  fun is_empty_stack(s : Stack of T) ret b : Bool
+  fun is_empty_stack(s: Stack of T) ret b : Bool
   {- Devuelve True si la pila es vacía -}
 
-  fun top(s : Stack of T) ret e : T
+  fun top(s: Stack of T) ret e : T
   {- Devuelve el elemento que se encuentra en el tope de s. -}
   {- PRE: not is_empty_stack(s) -}
 
-  proc pop (in/out s : Stack of T)
+  proc pop (in/out s: Stack of T)
   {- Elimina el elemento que se encuentra en el tope de s. -}
   {- PRE: not is_empty_stack(s) -}
 ```
@@ -1046,7 +1046,7 @@ end fun
 
 ```cs
 //  i es un entero que representa el candidato actual
-fun backtracking(C: array[1..n] of Candidate, i: Nat, p: ProbData) ret S : Solution
+fun backtracking(C: array[1..n] of Candidate, i: Nat, p: ProbData) ret S: Solution
   
   //  si el problema es simple -> se resuelve
   if(problem_easy(p)) -> S := base_solution(p)
@@ -1137,4 +1137,215 @@ fun dynamic(C: array[1..n] of Candidate, p: Nat) ret S: Solution
     od
   od
 end fun 
+```
+
+## Recorrida de Grafos
+
+Recorrer un grafo, significa procesar los vértices del mismo,
+de forma organizada de modo de asegurarse:
+
+- que todos los vértices sean procesados,
+- que ninguno de ellos sea procesado más de una vez.
+
+Se habla de procesar los vértices, pero también utilizaremos la
+palabra visitar los vértices. En este contexto, son sinónimos.  
+
+Puede haber más de una forma natural de recorrer un cierto
+grafo.
+
+### Arboles binarios
+
+3 formas vistas:  
+
+- Pre-order: se visita raíz, después se recorren los subárboles, primero el izquierdo y luego el derecho
+- In-order: se recorre el subárbol izquierdo, luego la raíz y luego el derecho
+- Post-order: se recorren los subárboles, primero el izquierdo, después el derecho y finalmente la raiz
+
+Hay otras 3, las anteriores intercambiando el orden de los subárboles
+
+Todas estas son ejemplo de DFS (Depth-first search):  
+se recorre el árbol primero en profundidad
+
+Además existen otras 2, se recorren primero los nodos de más arriba y se finaliza en los más profundos
+
+Éstas últimas son ejemplo de BFS (Breadth-first search):  
+se recorre el árbol primero a lo ancho
+
+Un programa que recorra en BFS es más difícil de escribir,
+
+### Árboles Finitarios
+
+Son árboles en los que cada vértice tiene una cantidad
+finita (pero puede ser variable) de hijos.
+
+- La recorrida in-order deja de tener sentido
+- Las recorridas pre-order y pos-order (DFS) y BFS siguen teniendo sentido
+
+```cs
+type tmark = tuple
+              ord: array[V] of nat
+              cont: nat
+            end
+
+proc init(out mark: tmark)
+  mark.cont := 0
+end
+
+proc visit(in/out mark: tmark, in v: V)
+  mark.cont := mark.cont + 1
+  mark.ord[v] := mark.cont
+end
+```
+
+Asumimos que un árbol viene dado por su raíz (root) y una
+función (children) que devuelve (el conjunto o la lista de) los
+hijos de cada vértice
+
+```cs
+fun pre_order(G = (V, root, children)) ret mark: tmark
+  init(mark)
+  pre_traverse(G, mark, root)
+end fun
+
+proc pre_traverse(in G, in/out mark: tmark, in v: V)
+  visit(mark, v)
+  //  de alguna forma esto agarra el de más a la izq??
+  for w ∈ children(v) do
+    pre_traverse(G, mark, w) 
+  od
+end proc
+```
+
+```cs
+fun pos_order(G = (V, root, children)) ret mark: tmark
+  init(mark)
+  pre_traverse(G, mark, root)
+end fun
+
+proc pos_traverse(in G, in/out mark: tmark, in v: V)
+  //  de alguna forma esto agarra el de más a la izq??
+  for w ∈ children(v) do
+    pre_traverse(G, mark, w) 
+  od
+  visit(mark, v)
+end proc
+```
+
+### Grafos Arbitrarios, DFS
+
+Como ahora puede haber ciclos, es necesario poder averiguar
+si un vértice ya fue visitado.
+
+```cs
+proc init(out mark: tmark)
+  mark.cont := 0
+  for v ∈ V do 
+    mark.ord[v] := 0 
+  od
+end proc
+
+fun visited(mark: tmark, v: V) ret b: bool
+  b := (mark.ord[v] ≠ 0)
+end fun
+```
+
+```cs
+//  vecino es un vértice apuntado por v
+fun dfs(G = (V, neighbours)) ret mark: tmark
+  init(mark)
+  for v ∈ V do
+    if ¬visited(mark, v) -> 
+      dfsearch(G, mark, v) 
+    fi
+  od
+end fun
+
+//  si un vértice no está visitado
+proc dfsearch(in G, in/out mark: tmark, in v: V)  
+  //  lo marca
+  visit(mark, v)
+  //  hace lo mismo para sus vecinos
+  for w ∈ neighbours(v) do
+    if ¬visited(mark, w) -> 
+      dfsearch(G, mark, w) 
+    fi
+  od
+end proc
+```
+
+#### Iterativo
+
+se introdujo una pila para evitar recursión
+
+```cs
+proc dfsearch(in G, in/out mark: tmark, in v: V)
+  var p: Stack of V
+
+  //  inicializa una pila vacía
+  empty(p)
+
+  //  marca el primer vértice
+  visit(mark, v)
+  
+  //  agrega el primer vértice a la pila
+  push(v, p)
+
+  while ¬is_empty(p) do
+    //  encuentra un vecino no visitado del vértice más alto en la pila
+    if ∃ w ∈ neighbours(top(p)) : ¬visited(mark, w) ->
+      //  visita el vecino
+      visit(mark, w)
+      //  lo sube a la pila
+      push(w, p)
+
+    //  si el vértice no tiene vecinos no visitados
+    else
+      //  lo saca de la pila, sigue buscando para el vértice anterior
+      pop(p)
+    fi
+  od
+end proc
+```
+
+### Grafos Arbitrarios, BFS
+
+Si cambiamos la pila por una cola en el Iterativo obtenemos BFS
+
+```cs
+proc bfsearch(in G, in/out mark: tmark, in v: V)
+  var q: Queue of V
+  
+  //  inicializa una cola vacía
+  empty(q)
+  
+  //  visita el primer vértice
+  visit(mark, v)
+  
+  //  encola el primer vértice
+  enqueue(q, v)
+
+  while ¬is_empty(q) do
+    //  encuentra un vecino no visitado del vértice con más prioridad
+    if ∃ w ∈ neighbours(first(q)) : ¬visited(mark,w) ->
+      //  visita el vecino
+      visit(mark, w)
+      //  lo encola
+      enqueue(q, w)
+
+    //  si el vértice no tiene vecinos no visitados
+    else 
+      //  lo saca de la cola, sigue buscando para el vértice siguiente
+      dequeue(q)
+    fi
+  od
+end proc
+
+fun bfs(G = (V, neighbours)) ret mark: tmark
+  init(mark)
+  for v ∈ V do
+    if ¬visited(mark, v) -> 
+      bfsearch(G, mark, v) 
+    fi
+  od
+end fun
 ```
