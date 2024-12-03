@@ -171,9 +171,21 @@ void on_show(dict_t current) {
     dict_dump(current, stdout);
 }
 
-int main(void) {
+int main(int argc, char *argv[]) {
     char option = '\0';
+    if (argc > 2) {
+        print_help(argv[0]);
+        return (EXIT_FAILURE);
+    }
+
     dict_t current = dict_empty();
+    
+    if (argc == 2){
+        string filename = string_create(argv[1]);
+        current = dict_from_file(filename);
+        filename = string_destroy(filename);
+    }
+
     /* print a simple menu and do the requested operations */
     do {
         option = print_menu();
