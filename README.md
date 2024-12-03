@@ -95,7 +95,9 @@ El comando **skip** equivale a una secuencia vacía:
 
 El comando **for k:= n to m do C(k) od** “equivale” también a una secuencia:
 
-- $ ops\left(for \, k := n \, to \, m \, do \, C(k) \, od\right) = \sum_{k=n}^m ops(C(k)) $
+$$
+ops\left(for \text{ } k := n \text{ } to \text{ } m \text{ } do \text{ } C(k) \text{ } od\right) = \sum_{k=n}^m ops(C(k))
+$$
 
 ## Insertion Sort
 
@@ -390,11 +392,14 @@ $$
   - `descompose` = partir al medio (`b` = 2)
   - `a` = 2
   - `combine` = merge
+  - `k` = 1 (descompose() -> $O(1)$, combine() -> $$O(n)$$ )
+
 - Quick Sort:
   - `x simple` = fragmento de arreglo de longitud 0 o 1
   - `descompose` = separar los menores de los mayores (`b` = 2)
   - `a` = 2
   - `combine` = yuxtaponer (`partition()`)
+  - `k` = 1 (descompose() -> $O(1)$, combine() -> $$O(n)$$ )
 
 - Busqueda Binaria:
 
@@ -1041,7 +1046,7 @@ end fun
 
 ```cs
 //  i es un entero que representa el candidato actual
-fun backtracking(C: array[1..n] of Candidate, i: Nat, p : ProbData) ret S : Solution
+fun backtracking(C: array[1..n] of Candidate, i: Nat, p: ProbData) ret S : Solution
   
   //  si el problema es simple -> se resuelve
   if(problem_easy(p)) -> S := base_solution(p)
@@ -1088,3 +1093,48 @@ $$
 $$
 
 no siempre son necesarios el caso erroneo o el caso de salteo  
+
+## Programación Dinámica
+
+Método para **transformar** una **definición *recursiva* en *iterativa***
+a través de la confección de una tabla de valores.
+
+**Objetivo**: evitar la reiteración de cómputos  
+
+### Forma General PD
+
+```cs
+fun dynamic(C: array[1..n] of Candidate, p: Nat) ret S: Solution
+  //  array con las soluciones parciales
+  var solutions: array[1..n, 1..p] of Solution
+
+  //  se inicializan todos los subproblemas ad_hoc()
+  for i := 0 to n do solutions[i, 0] = base_solution(p)  od
+  
+  /**  
+   * empieza desde 1, [0, 0] es base_solution()
+   * se inicializan los casos en que no quedan candidatos
+   */
+  for j := 1 to p do solutions[0, j] = error_solution(p) od
+
+  //  Se itera sobre candidatos y tamaños deproblemas
+  for i := 1 to n do
+    for j := 1 to p do
+      //  si un candidato no es factible dado el tamaño del problema
+      if (not is_feasible(C[i], j)) -> 
+        //  se ignora el candidato
+        solutions[i, j] := solutions[i - 1, j]
+      
+      else ->
+        //  se elige una solución
+        solutions[i, j] := pick_solution(
+          //  Entre la solución ignorando el candidato
+          solutions[i - 1, p],
+          //  y la solución usando el candidato
+          use_candidate(solutions[i, modify_problem(p, C[i])])
+        )
+      fi
+    od
+  od
+end fun 
+```
