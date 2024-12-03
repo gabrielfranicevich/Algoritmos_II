@@ -346,7 +346,7 @@ end fun
 
 normalmente los $x_i$ son fracciones de $x$
 $|x_i| = \frac{|x|}{b}$
-$ b > 1$
+$b > 1$
 
 - a = número de llamadas recursivas a DyV en una iteración
 - b = relación entre el tamaño de $x$ y $x_i$ (satisface $|x_i| = \frac{|x|}{b}$)
@@ -528,7 +528,7 @@ var a: array[M..N] of T
 
 ```cs
 //  `b` tiene `(m - n) × (q - p)` elementos de tipo `string`
-var b: array[n..m,p..q] of string
+var b: array[n..m, p..q] of string
 
 //  para acceder a un elemento:
 b[i, j] := "bijota"
@@ -793,4 +793,82 @@ operations
   proc dequeue(in/out q: Queue of T)
   {- Elimina el elemento que se encuentra al comienzo de `q`. -}
   {- PRE: not is_empty_queue(q) -}
+```
+
+## Algoritmos Voraces (Greedy)
+
+Es la técnica más sencilla de resolución de problemas.  
+
+Normalmente se trata de algoritmos que resuelven
+problemas de optimización, es decir, tenemos un
+problema que queremos resolver de manera óptima:
+
+- el camino más corto que une dos ciudades,
+- el valor máximo alcanzable entre ciertos objetos,
+- el costo mínimo para proveer un cierto servicio,
+- el menor número de billetes para pagar un cierto importe
+- el menor tiempo necesario para realizar un trabajo, etc.
+
+Los algoritmos voraces intentan construir la solución óptima buscada paso a paso,
+eligiendo en cada paso la componente de la solución que parece más apropiada.
+
+Caracteristicas:
+
+- Nunca revisan una elección ya realizada
+- Confían en haber elegido bien las componentes anteriores.
+- No todos los problemas admiten solución voraz,
+- Pero varios problemas interesantes sí admiten solución voraz,
+- Dichas soluciones resultan muy eficientes
+
+### Forma general
+
+Ingredientes comunes de los algoritmos voraces
+
+- se tiene un problema a resolver de manera óptima
+- un conjunto de candidatos a integrar la solución,
+- los candidatos se van clasificando en 3:
+  - los aún no considerados,
+  - los incorporados a la solución parcial,
+  - los descartados,
+- tenemos una manera de saber si los candidatos ya incorporados completan una solución del problema
+- una función que comprueba si un candidato o un conjunto de candidatos es factible de formar parte de la solución
+- otra función que selecciona de entre los candidatos aún no considerados, el más promisorio.
+
+Receta de los algoritmos voraces
+
+- inicialmente ningún candidato ha sido considerado,
+- En cada paso se utiliza la función de selección para elegir cuál candidato considerar
+- Se chequea que el candidato considerado sea factible para incorporarlo a la solución y se lo agrega o no
+- Se repiten los pasos anteriores hasta que la colección de candidatos elegidos sea una solución
+
+Esquema general:
+
+```cs
+//  p es un input con información del problema
+fun voraz(C: Set of Candidate, p: ProbData) ret S: Solution
+  var c: Candidate
+  var p_aux: ProbData
+  var C_aux: Set of Candidate
+  
+  S := base_solution()
+  
+  C_aux := set_copy(C)
+  p_aux := p
+
+  if(not problem_solvable(C, p)) -> S := error_solution()
+  else
+    do (not problem_is_solved(p_aux)) ->
+      
+      c := select_candidate(C)
+      elim(C_aux, c)
+
+      if feasible(c) ->
+        S := modify_solution(S, c, p_aux)
+        p_aux := modify_problem(p_aux, c)
+      fi
+    od
+  fi
+  set_destroy(C_aux)
+
+end fun
 ```
