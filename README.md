@@ -1066,6 +1066,7 @@ fun backtracking(C: array[1..n] of Candidate, i: Nat, p: ProbData) ret S: Soluti
       //  usando el candidato actual
       use_candidate(
         backtracking(C, i, modify_problem(p, C[i]))
+        //  también debería restarse 1 si los candidatos no son infinitos
       )
     ) 
   fi
@@ -1093,6 +1094,7 @@ $$
 $$
 
 no siempre son necesarios el caso erroneo o el caso de salteo  
+si no son infinitos los candidatos entonces debe restarse 1 a i en el caso de uso
 
 ## Programación Dinámica
 
@@ -1132,6 +1134,7 @@ fun dynamic(C: array[1..n] of Candidate, p: Nat) ret S: Solution
           solutions[i - 1, p],
           //  y la solución usando el candidato
           use_candidate(solutions[i, modify_problem(p, C[i])])
+          //  también debería restarse 1 si los candidatos no son infinitos
         )
       fi
     od
