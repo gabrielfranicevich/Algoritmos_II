@@ -4,15 +4,13 @@
 
 #define EVENT_MAX_TIME 90u
 
-typedef enum
-{
+typedef enum {
     Goal,
     YellowCard,
     RedCard
 } event;
 
-typedef enum
-{
+typedef enum {
     Home,
     Away
 } team;

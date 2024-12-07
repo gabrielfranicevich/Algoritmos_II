@@ -11,9 +11,9 @@ HELPER
 static void print_event_array(matchTimeline mt){
     event *mtArray = matchTimeline_events_array(mt);
     fprintf(stdout, "\nAs array [ ");
-    for (unsigned int i = 0u; i < matchTimeline_size(mt); i++){
+    for (unsigned int i = 0u; i < matchTimeline_size(mt); i++) {
         char *e = NULL;
-        switch (mtArray[i]){
+        switch (mtArray[i]) {
             case Goal:
                 e = "G";
                 break;
@@ -35,7 +35,7 @@ static void print_event_array(matchTimeline mt){
 TESTS
 ============================================================================ */
 
-static void test_all_ok() {
+static void test_all_ok(){
     matchTimeline mt = matchTimeline_empty();
     mt = matchTimeline_score_goal(mt, Home, 23, 10);
     mt = matchTimeline_score_goal(mt, Home, 36, 11);
@@ -67,7 +67,7 @@ static void test_all_ok() {
  *        crea automaticamente una roja a ese jugador
  *
  */
-static void test_two_yellows_then_red() {
+static void test_two_yellows_then_red(){
     matchTimeline mt = matchTimeline_empty();
     mt = matchTimeline_receive_yellowCard(mt, Away, 44, 24);
     mt = matchTimeline_receive_yellowCard(mt, Away, 54, 24);
@@ -95,8 +95,18 @@ static void test_two_yellows_then_red() {
 static void test_new_event_on_red_card(){
     matchTimeline mt = matchTimeline_empty();
 
-    // COMPLETAR
+    mt = matchTimeline_receive_redCard(mt, Away, 44, 24);
 
+    assert(matchTimeline_is_time_and_score_valid(mt));
+    assert(matchTimeline_size(mt) == 1);
+    assert(matchTimeline_get_score(mt, Home) == 0);
+    assert(matchTimeline_get_score(mt, Away) == 0);
+
+    // print
+    matchTimeline_print(mt);
+    print_event_array(mt);
+
+    // destroy mt
     matchTimeline_destroy(mt);
 }
 
@@ -107,11 +117,9 @@ static void test_new_event_on_red_card(){
  *
  */
 static void test_insert_after_90_minutes(){
-
     matchTimeline mt = matchTimeline_empty();
     mt = matchTimeline_score_goal(mt, Home, 23, 10);
     mt = matchTimeline_score_goal(mt, Away, 91, 11);
-
     assert(matchTimeline_is_time_and_score_valid(mt));
     assert(matchTimeline_size(mt) == 1);
     assert(matchTimeline_get_score(mt, Home) == 1);
@@ -130,8 +138,7 @@ static void test_insert_after_90_minutes(){
  *        este caso, se agregan registros que están desordenados
  *
  */
-static void test_invalid_time_order()
-{
+static void test_invalid_time_order(){
 
     matchTimeline mt = matchTimeline_empty();
     mt = matchTimeline_score_goal(mt, Home, 23, 10);
@@ -152,12 +159,11 @@ static void test_invalid_time_order()
 
 
 
-int main(void)
-{
+int main(void){
     fprintf(stdout, "test_all_ok() <-------------------------\n");
     test_all_ok();
     fprintf(stdout, "\n");
-
+    
     fprintf(stdout, "test_two_yellows_then_red() <-----------\n");
     test_two_yellows_then_red();
     fprintf(stdout, "\n");

@@ -4,6 +4,7 @@ SOURCES = main.c matchTimeline.c
 OBJECTS = $(SOURCES:.c=.o)
 TARGET = matchTimeline
 
+
 .PHONY: clean
 
 all: $(TARGET)
@@ -22,3 +23,4 @@ $(TARGET): $(OBJECTS)
 
 clean:
 	$(RM) $(OBJECTS) $(TARGET)
+

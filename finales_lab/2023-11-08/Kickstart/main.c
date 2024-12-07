@@ -8,25 +8,21 @@
 HELPER
 ============================================================================ */
 
-static void print_event_array(matchTimeline mt)
-{
+static void print_event_array(matchTimeline mt){
     event *mtArray = matchTimeline_events_array(mt);
     fprintf(stdout, "\nAs array [ ");
-    for (unsigned int i = 0u; i < matchTimeline_size(mt); i++)
-    {
+    for (unsigned int i = 0u; i < matchTimeline_size(mt); i++){
         char *e = NULL;
-        switch (mtArray[i])
-        {
-
-        case Goal:
-            e = "G";
-            break;
-        case YellowCard:
-            e = "Y";
-            break;
-        case RedCard:
-            e = "R";
-            break;
+        switch (mtArray[i]){
+            case Goal:
+                e = "G";
+                break;
+            case YellowCard:
+                e = "Y";
+                break;
+            case RedCard:
+                e = "R";
+                break;
         }
 
         fprintf(stdout, "%s ", e);
@@ -39,8 +35,7 @@ static void print_event_array(matchTimeline mt)
 TESTS
 ============================================================================ */
 
-static void test_all_ok()
-{
+static void test_all_ok() {
     matchTimeline mt = matchTimeline_empty();
     mt = matchTimeline_score_goal(mt, Home, 23, 10);
     mt = matchTimeline_score_goal(mt, Home, 36, 11);
@@ -72,8 +67,7 @@ static void test_all_ok()
  *        crea automaticamente una roja a ese jugador
  *
  */
-static void test_two_yellows_then_red()
-{
+static void test_two_yellows_then_red() {
     matchTimeline mt = matchTimeline_empty();
     mt = matchTimeline_receive_yellowCard(mt, Away, 44, 24);
     mt = matchTimeline_receive_yellowCard(mt, Away, 54, 24);
@@ -98,8 +92,7 @@ static void test_two_yellows_then_red()
  *        en el matchTimeline
  *
  */
-static void test_new_event_on_red_card()
-{
+static void test_new_event_on_red_card(){
     matchTimeline mt = matchTimeline_empty();
 
     // COMPLETAR
@@ -113,8 +106,7 @@ static void test_new_event_on_red_card()
  *        registro en el matchTimeline
  *
  */
-static void test_insert_after_90_minutes()
-{
+static void test_insert_after_90_minutes(){
 
     matchTimeline mt = matchTimeline_empty();
     mt = matchTimeline_score_goal(mt, Home, 23, 10);

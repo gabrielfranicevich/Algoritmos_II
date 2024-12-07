@@ -8,8 +8,7 @@
 STRUCTS
 ============================================================================ */
 
-struct s_node
-{
+struct s_node{
     team team;
     event e;
     time t;
@@ -17,18 +16,17 @@ struct s_node
     struct s_node *next;
 };
 
-struct s_matchTimeline
-{
+struct s_matchTimeline {
     struct s_node *head;
     // COMPLETAR
+
 };
 
 /* ============================================================================
 INVERP & VALIDATION
 ============================================================================ */
 
-static bool invrep(matchTimeline mt)
-{
+static bool invrep(matchTimeline mt){
     // COMPLETAR
     return mt != NULL || mt == NULL; // Just for compiling, delete it
 }
